@@ -1,0 +1,92 @@
+
+import java.util.ArrayList;
+import java.util.Arrays;
+/**************************************************************
+Purpose/Description: Implements Radix Sort.
+Author’s Panther ID: 1946676
+Certification:
+I hereby certify that this work is my own and none of it is the work of
+any other person.
+**************************************************************/
+public class radixSort {
+
+	public static void main(String[] args) {
+
+		int[] a = {24, 12, 4, 366, 45, 66, 8, 14};
+		int[] b = {2,202,5000,48,88,2,202,5000,48,88};
+		
+		System.out.println(Arrays.toString(fillBuckets(a)));
+		System.out.println(Arrays.toString(fillBuckets(b)));
+	}
+	
+	public static int[] fillBuckets(int a[]) {
+		
+		int radix = 10;
+		ArrayList<Integer>[] radixBucket = new ArrayList[radix];
+		int runningDigit = 1;
+		int digit = 1;
+		
+		//Initializes each arraylist
+		for (int i = 0; i < radix; i++) {
+            radixBucket[i] = new ArrayList<Integer>();
+        }
+		//Iterates until all leading digits are zero
+		while (runningDigit >=1) {
+
+		//Filters each number from array into the corresponding arraylist
+		//Uses mod digit*10 to get ones, to tens to,... nth digit.
+			runningDigit = -1;
+			for (int i: a) {
+				
+				if((i&1) == 1) {
+					System.out.println(i +  " is odd, all inputs must be even");				
+					return null;
+				}
+				else {
+					
+					//Isolates the desired digit and adds it to the correct bucket
+					radixBucket[(int)(i%(Math.pow(10, digit))/Math.pow(10, digit-1))].add(i);
+					
+					//stores the largest leading digits found in one iteration
+					if(runningDigit < (int)i/Math.pow(10, digit)) {
+						
+						runningDigit = (int) (i/Math.pow(10, digit));
+
+					}
+					
+				}
+
+			
+			}
+			/*This can be used to show the algo running
+			 * System.out.println("final running digit " + runningDigit);
+			System.out.println(Arrays.toString(radixBucket));			
+			System.out.println(Arrays.toString(a)); */
+			
+			a = sortBuckets(radixBucket, a.length);
+			
+			//clears all arraylists to prepare them for the next iteration
+			for (int e = 0; e < radix; e++) {
+	            radixBucket[e].clear();
+	        }
+			digit++;
+		}
+		return a;
+	}
+	
+	public static int[] sortBuckets(ArrayList<Integer>[] buckets, int arrLength) {
+		int[] sortedBuckets = new int[arrLength];
+		int index = 0;
+		//Iterates through the array to empty each bucket
+		for(ArrayList<Integer> a: buckets) {
+	
+			//Empties each bucket from each array list
+			for(Integer bucket: a) {
+				sortedBuckets[index] = bucket;
+				index++;
+			}
+		}
+		return sortedBuckets;
+	}
+
+}
